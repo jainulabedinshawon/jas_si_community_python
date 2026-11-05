@@ -90,3 +90,91 @@ def test_protected_endpoint_requires_key():
             client.authorize("test-1", "read", "document")
     finally:
         client.close()
+
+
+def test_verify():
+    def handler(request):
+        assert request.url.path == "/v1/verify"
+        assert request.headers["X-API-Key"] == "test-key"
+
+        import json
+        body = json.loads(request.read())
+
+        assert body["action_id"] == "verify-1"
+        assert body["claimed_success"] is True
+        assert body["observed_state"] == "completed"
+        assert body["evidence_ref"] == "evidence-1"
+
+        return httpx.Response(
+            200,
+            json={
+                "action_id": "verify-1",
+                "status": "VERIFIED",
+                "evidence_origin": "caller_submitted",
+            },
+        )
+
+    client = make_client(handler)
+
+    try:
+        result = client.verify(
+            action_id="verify-1",
+            claimed_success=True,
+            observed_state="completed",
+            evidence_ref="evidence-1",
+        )
+        assert result["status"] == "VERIFIED"
+    finally:
+        client.close()
+
+
+def test_github_evidence():
+    def handler(request):
+        import json
+        body = json.loads(request.read())
+
+        assert request.url.path == "/v1/github/evidence"
+        assert body["repository"] == "owner/repo"
+        assert body["commit_sha"] == "a" * 40
+        assert body["paths"] == ["README.md"]
+
+        return httpx.Response(
+            200,
+            json={
+                "status": "EVIDENCE_INTEGRITY_VERIFIED",
+                "semantic_truth_verified": False,
+            },
+        )
+
+    client = make_client(handler)
+
+    try:
+        result = client.verify_github_evidence(
+            repository="owner/repo",
+            commit_sha="a" * 40,
+            paths=["README.md"],
+        )
+        assert result["semantic_truth_verified"] is False
+    finally:
+        client.close()
+
+
+def test_https_required_for_remote_api():
+    with pytest.raises(ValueError):
+        JASSIClient(base_url="http://example.com")
+
+
+def test_invalid_timeout_rejected():
+    with pytest.raises(ValueError):
+        JASSIClient(timeout=0)
+
+
+def test_verify_requires_api_key():
+    client = JASSIClient(api_key=None)
+
+    try:
+        with pytest.raises(JASSIError):
+            client.verify("verify-1", True)
+    finally:
+        client.close()
+
