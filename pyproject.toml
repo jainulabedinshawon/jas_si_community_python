@@ -5,8 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "jas-si-community-python"
 version = "0.1.0"
-description = "Independent Python HTTP client for the JAS-SI API"
+description = "A lightweight Python client for JAS-SI Intelligence API"
+readme = "README.md"
 requires-python = ">=3.10"
+license = {file = "LICENSE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "httpx>=0.27,<1.0"
 ]
