@@ -185,6 +185,12 @@ class JASSIClient:
                 "Between 1 and 10 evidence files are required."
             )
 
+        if any(not isinstance(path, str) for path in paths):
+            raise ValueError("Invalid repository file path.")
+           
+        if len(set(paths)) != len(paths):
+            raise ValueError("Duplicate evidence paths are not allowed.")
+        
         if len(set(paths)) != len(paths):
             raise ValueError("Duplicate evidence paths are not allowed.")
 
