@@ -362,3 +362,16 @@ def test_github_evidence_rejects_invalid_inputs(
     finally:
         client.close()
 
+
+def test_github_evidence_rejects_non_string_path():
+    client = JASSIClient(api_key="test-key")
+
+    try:
+        with pytest.raises(ValueError):
+            client.verify_github_evidence(
+                "owner/repo",
+                "a" * 40,
+                [["invalid"]],
+            )
+    finally:
+        client.close()
