@@ -4,6 +4,22 @@ All notable changes to JAS-SI Community Python SDK are documented in this file.
 
 This project follows "Semantic Versioning" (https://semver.org/).
 
+
+[0.1.1] - 2026-11-06
+
+Changed
+
+- Updated the SDK package version to 0.1.1.
+- Adopted modern PEP 639 license metadata using Apache-2.0.
+- Aligned the runtime package version with project metadata.
+
+Added
+
+- Added automated package build validation for wheel and source distributions.
+- Added wheel content and license metadata checks.
+- Added isolated wheel installation and package smoke tests.
+- Added automated validation of the published package version and Python compatibility metadata.
+
 [0.1.0] - 2026-11-06
 
 Added
