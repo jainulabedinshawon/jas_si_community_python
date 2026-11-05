@@ -1,8 +1,8 @@
-
 """HTTP client for the JAS-SI REST API."""
 
 from __future__ import annotations
 
+import re
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -160,6 +160,45 @@ class JASSIClient:
     ) -> dict[str, Any]:
         """Verify GitHub commit and file integrity."""
         self._require_api_key()
+
+        if not isinstance(repository, str) or not (
+            3 <= len(repository) <= 200
+        ):
+            raise ValueError("Invalid GitHub repository format.")
+
+        if not re.fullmatch(
+            r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
+            repository,
+        ):
+            raise ValueError("Invalid GitHub repository format.")
+
+        if not isinstance(commit_sha, str) or not re.fullmatch(
+            r"[0-9a-f]{40}",
+            commit_sha,
+        ):
+            raise ValueError(
+                "A full 40-character lowercase commit SHA is required."
+            )
+
+        if not isinstance(paths, list) or not 1 <= len(paths) <= 10:
+            raise ValueError(
+                "Between 1 and 10 evidence files are required."
+            )
+
+        if len(set(paths)) != len(paths):
+            raise ValueError("Duplicate evidence paths are not allowed.")
+
+        for path in paths:
+            if (
+                not isinstance(path, str)
+                or not path
+                or len(path) > 500
+                or path.startswith("/")
+                or "\\" in path
+                or "\x00" in path
+                or any(part in ("", ".", "..") for part in path.split("/"))
+            ):
+                raise ValueError("Invalid repository file path.")
 
         return self._request(
             "POST",
