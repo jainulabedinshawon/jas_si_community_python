@@ -55,7 +55,7 @@ def test_authorize():
     try:
         result = client.authorize(
             "test-1",
-            "read",
+            "read_repository",
             "document",
         )
         assert result["allowed"] is True
@@ -75,7 +75,7 @@ def test_api_error():
 
     try:
         with pytest.raises(JASSIError) as error:
-            client.authorize("test-1", "read", "document")
+            client.authorize("test-1", "read_repository", "document")
 
         assert error.value.status_code == 401
     finally:
@@ -87,7 +87,7 @@ def test_protected_endpoint_requires_key():
 
     try:
         with pytest.raises(JASSIError):
-            client.authorize("test-1", "read", "document")
+            client.authorize("test-1", "read_repository", "document")
     finally:
         client.close()
 
@@ -109,7 +109,7 @@ def test_verify():
             200,
             json={
                 "action_id": "verify-1",
-                "status": "VERIFIED",
+                "status": "INCONCLUSIVE",
                 "evidence_origin": "caller_submitted",
             },
         )
@@ -123,7 +123,7 @@ def test_verify():
             observed_state="completed",
             evidence_ref="evidence-1",
         )
-        assert result["status"] == "VERIFIED"
+        assert result["status"] == "INCONCLUSIVE"
     finally:
         client.close()
 
@@ -177,4 +177,3 @@ def test_verify_requires_api_key():
             client.verify("verify-1", True)
     finally:
         client.close()
-
