@@ -83,7 +83,7 @@ class JASSIClient:
         try:
             data = response.json()
         except ValueError:
-            data = {}
+            data = None
 
         if not response.is_success:
             detail = (
@@ -95,7 +95,7 @@ class JASSIClient:
 
         if not isinstance(data, dict):
             raise JASSIError(
-                "Unexpected API response format.",
+                "Invalid or empty JSON response from JAS-SI API.",
                 response.status_code,
             )
 
