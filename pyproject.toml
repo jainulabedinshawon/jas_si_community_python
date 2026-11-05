@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jas-si-community-python"
+version = "0.1.0"
+description = "Independent Python HTTP client for the JAS-SI API"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27,<1.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
