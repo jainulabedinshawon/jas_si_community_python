@@ -18,7 +18,7 @@ Added
 - Added automated package build validation for wheel and source distributions.
 - Added wheel content and license metadata checks.
 - Added isolated wheel installation and package smoke tests.
-- Added automated validation of the published package version and Python compatibility metadata.
+- Added automated validation of the built package version and Python compatibility metadata.
 
 [0.1.0] - 2026-11-06
 
