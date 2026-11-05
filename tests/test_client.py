@@ -332,3 +332,33 @@ def test_verify_rejects_evidence_ref_without_observed_state():
     finally:
         client.close()
 
+
+@pytest.mark.parametrize(
+    ("repository", "commit_sha", "paths"),
+    [
+        ("invalid-repo", "a" * 40, ["README.md"]),
+        ("owner/repo", "A" * 40, ["README.md"]),
+        ("owner/repo", "a" * 40, []),
+        ("owner/repo", "a" * 40, ["README.md", "README.md"]),
+        ("owner/repo", "a" * 40, ["../secret.txt"]),
+        ("owner/repo", "a" * 40, ["/absolute/path"]),
+        ("owner/repo", "a" * 40, ["folder\\file.txt"]),
+    ],
+)
+def test_github_evidence_rejects_invalid_inputs(
+    repository,
+    commit_sha,
+    paths,
+):
+    client = JASSIClient(api_key="test-key")
+
+    try:
+        with pytest.raises(ValueError):
+            client.verify_github_evidence(
+                repository,
+                commit_sha,
+                paths,
+            )
+    finally:
+        client.close()
+
