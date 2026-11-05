@@ -297,3 +297,38 @@ def test_invalid_success_response_rejected():
             client.health()
     finally:
         close_client(client)
+
+
+def test_verify_rejects_observed_state_without_evidence_ref():
+    client = JASSIClient(api_key="test-key")
+
+    try:
+        with pytest.raises(
+            ValueError,
+            match="must be provided together",
+        ):
+            client.verify(
+                action_id="verify-3",
+                claimed_success=True,
+                observed_state="completed",
+            )
+    finally:
+        client.close()
+
+
+def test_verify_rejects_evidence_ref_without_observed_state():
+    client = JASSIClient(api_key="test-key")
+
+    try:
+        with pytest.raises(
+            ValueError,
+            match="must be provided together",
+        ):
+            client.verify(
+                action_id="verify-4",
+                claimed_success=True,
+                evidence_ref="evidence-4",
+            )
+    finally:
+        client.close()
+
