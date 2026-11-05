@@ -1,161 +1,187 @@
-JAS-SI Community Python Client
+⚡ JAS-SI Community Python SDK
 
-An independent Python HTTP client for the JAS-SI REST API.
+A lightweight Python client for JAS-SI Intelligence API
 
-The client lets Python applications communicate with JAS-SI for authorization evaluation, outcome verification, and GitHub evidence-integrity checks.
+""Python" (https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)" (https://www.python.org/)
+""CI" (https://github.com/jainulabedinshawon/jas_si_community_python/actions/workflows/ci.yml/badge.svg)" (https://github.com/jainulabedinshan/jas_si_community_python/actions/workflows/ci.yml)
+""API" (https://img.shields.io/badge/JAS--SI_API-v0.1.0-0A7A55)" (https://jas-si.vercel.app/docs)
+""SDK" (https://img.shields.io/badge/SDK-0.1.0-6F42C1)" (https://github.com/jainulabedinshawon/jas_si_community_python)
 
-This SDK does not contain or execute JAS-SI Core logic.
+JAS-SI Community Python SDK is an independent Python HTTP client for interacting with the JAS-SI API.
 
-Features
+It provides a simple interface for authorization evaluation, outcome verification, and GitHub evidence integrity checks.
 
-- Check API health
-- Request authorization evaluation
-- Submit outcome reports for verification
-- Verify GitHub commit and file integrity
-- HTTPS enforcement for remote API connections
-- Configurable request timeout
-- API-key authentication
-- Context-manager support
-- Python 3.10–3.13 compatibility
+«The SDK communicates with the JAS-SI API. It does not contain or expose the proprietary JAS-SI Core engine.»
 
-Requirements
+---
 
-- Python 3.10 or newer
-- Access to the JAS-SI API
-- An API key for protected endpoints
+✨ Features
 
-Installation
+- 🔐 Authorization evaluation
+- ✅ Outcome verification
+- 🐙 GitHub evidence integrity checks
+- 🔑 API key authentication
+- 🔒 HTTPS enforcement for remote API connections
+- ⏱️ Configurable request timeout
+- 🧩 Context manager support
+- 🧪 Automated tests across Python 3.10–3.13
+
+🚀 Installation
 
 Install directly from GitHub:
 
 pip install git+https://github.com/jainulabedinshawon/jas_si_community_python.git
 
-Or clone the repository and install locally:
-
-git clone https://github.com/jainulabedinshawon/jas_si_community_python.git
-cd jas_si_community_python
-pip install .
-
-Quick Start
+⚡ Quick Start
 
 from jas_si_community_python import JASSIClient
 
 with JASSIClient(
-    api_key="YOUR_API_KEY"
+    api_key="YOUR_API_KEY",
+    base_url="https://jas-si.vercel.app"
 ) as client:
 
     health = client.health()
     print(health)
 
-Use an environment variable or a secure secret manager for API keys in real applications. Do not commit API keys to source control.
+Keep your API key private. Never commit credentials to source control.
 
-Authorization Evaluation
+🔐 Authorization Evaluation
+
+Evaluate whether an action is authorized.
 
 from jas_si_community_python import JASSIClient
 
 with JASSIClient(api_key="YOUR_API_KEY") as client:
     result = client.authorize(
-        action_id="action-001",
+        action_id="task-001",
         action="read",
-        resource="document",
+        resource="repository"
     )
 
     print(result)
 
-This endpoint evaluates authorization. It does not execute the requested action.
+✅ Outcome Verification
 
-Outcome Verification
+Submit an outcome for verification.
 
 with JASSIClient(api_key="YOUR_API_KEY") as client:
     result = client.verify(
-        action_id="action-001",
+        action_id="task-001",
         claimed_success=True,
-        observed_state="completed",
-        evidence_ref="evidence-001",
+        observed_state={"status": "completed"},
+        evidence_ref="evidence-001"
     )
 
     print(result)
 
-The verification endpoint evaluates submitted outcome information. Caller-submitted evidence is not automatically independent evidence.
+🐙 GitHub Evidence Integrity
 
-GitHub Evidence Integrity
+Check GitHub commit and file evidence.
 
 with JASSIClient(api_key="YOUR_API_KEY") as client:
     result = client.verify_github_evidence(
         repository="owner/repository",
         commit_sha="YOUR_40_CHARACTER_COMMIT_SHA",
-        paths=["README.md"],
+        paths=["README.md"]
     )
 
     print(result)
 
-This endpoint checks GitHub commit and file integrity. It does not establish the semantic truth of repository contents.
+Important: GitHub evidence integrity checks do not establish the semantic truth of a claim or prove that a reported outcome is correct.
 
-Error Handling
-
-from jas_si_community_python import JASSIClient, JASSIError
-
-try:
-    with JASSIClient(api_key="YOUR_API_KEY") as client:
-        result = client.authorize(
-            "action-001",
-            "read",
-            "document",
-        )
-
-except JASSIError as error:
-    print("JAS-SI request failed:", error)
-
-    if error.status_code is not None:
-        print("HTTP status:", error.status_code)
-
-Configuration
+⚙️ Configuration
 
 client = JASSIClient(
-    base_url="https://jas-si.vercel.app",
     api_key="YOUR_API_KEY",
-    timeout=10.0,
+    base_url="https://jas-si.vercel.app",
+    timeout=15.0
 )
 
 Parameter| Description
-"base_url"| JAS-SI API base URL
-"api_key"| API key for protected endpoints
+"api_key"| API authentication key
+"base_url"| JAS-SI API endpoint
 "timeout"| Request timeout in seconds
 
-HTTPS is required for remote API URLs. HTTP is permitted only for local development addresses.
+The API key is required for protected endpoints.
 
-API Reference
+🛡️ Security Notes
 
-Method| Endpoint| Authentication
-"health()"| "GET /health"| Public
-"authorize()"| "POST /v1/authorize"| API key
-"verify()"| "POST /v1/verify"| API key
-"verify_github_evidence()"| "POST /v1/github/evidence"| API key
+- Use HTTPS for remote API connections.
+- Keep API keys in environment variables or a secrets manager.
+- Do not expose API keys in public repositories.
+- Use appropriate access controls for production systems.
 
-API documentation: https://jas-si.vercel.app/docs
+Example:
 
-Important Limitations
+import os
 
-- This SDK is an HTTP client, not the JAS-SI Core engine.
-- Authorization evaluation does not execute external actions.
-- Outcome verification depends on the evidence supplied to the API.
-- GitHub evidence-integrity checks do not prove semantic truth.
-- API availability, authentication, rate limits, and endpoint behavior are controlled by the API service.
+api_key = os.environ["JAS_SI_API_KEY"]
 
-Development
+⚠️ Scope and Limitations
+
+This project is an API client, not the JAS-SI Core engine.
+
+- The API evaluates authorization; it does not execute external actions.
+- Outcome verification depends on evidence submitted to the API.
+- Caller-submitted evidence should not automatically be described as independently collected evidence.
+- GitHub evidence checks establish integrity-related properties, not semantic truth.
+- API availability, authentication policies, rate limits, and endpoint behavior are controlled by the API service.
+
+📚 API Documentation
+
+- Live API: https://jas-si.vercel.app
+- Interactive API Docs: https://jas-si.vercel.app/docs
+- OpenAPI Specification: https://jas-si.vercel.app/openapi.json
+
+🧪 Development
+
+Clone the repository:
 
 git clone https://github.com/jainulabedinshawon/jas_si_community_python.git
+
 cd jas_si_community_python
 
-pip install -e ".[dev]"
+Install development dependencies:
+
+python -m pip install -e ".[dev]"
+
+Run tests:
+
 python -m pytest -v
 
-Project
+🏗️ Architecture
 
-- GitHub: https://github.com/jainulabedinshawon/jas_si_community_python
-- JAS-SI API: https://jas-si.vercel.app
-- API Documentation: https://jas-si.vercel.app/docs
+Your Python Application
+          |
+          v
+JAS-SI Community Python SDK
+          |
+          | HTTPS
+          v
+     JAS-SI API
+          |
+          v
+Authorization Evaluation
+Outcome Verification
+GitHub Evidence Integrity
 
-Maintained by JAS Research.
+The Community SDK remains architecturally separate from the proprietary JAS-SI Core.
 
-JAS-SI is designed around authorization evaluation, evidence-based verification, and accountable outcomes.
+🤝 Contributing
+
+Contributions, bug reports, and technical feedback are welcome.
+
+Please open an issue before proposing significant architectural changes.
+
+🏛️ Project
+
+JAS-SI — JAS Intelligence
+
+Developed by JAS Research.
+
+Research direction: Reality-Based Intelligence, Authorization-Gated Action, Independent Verification, and Accountable Governance.
+
+---
+
+Building intelligence that verifies reality — not just reports success.
