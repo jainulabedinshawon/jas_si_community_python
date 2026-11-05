@@ -46,9 +46,3 @@ Scope and Limitations
 - The SDK does not independently establish the truth of caller-submitted claims.
 
 ---
-
-### Scope and Limitations
-- This SDK is an independent HTTP client; it does not contain or reimplement JAS-SI Core logic.
-- The SDK does not execute external actions.
-- Verification results depend on the evidence and capabilities provided by the JAS-SI API.
-- The SDK does not independently establish the truth of caller-submitted claims.
