@@ -1,3 +1,4 @@
+
 """HTTP client for the JAS-SI REST API."""
 
 from __future__ import annotations
@@ -134,15 +135,19 @@ class JASSIClient:
         """Submit an outcome report for verification."""
         self._require_api_key()
 
+        if (observed_state is None) != (evidence_ref is None):
+            raise ValueError(
+                "observed_state and evidence_ref must be "
+                "provided together."
+            )
+
         payload: dict[str, Any] = {
             "action_id": action_id,
             "claimed_success": claimed_success,
         }
 
-        if observed_state is not None:
+        if observed_state is not None and evidence_ref is not None:
             payload["observed_state"] = observed_state
-
-        if evidence_ref is not None:
             payload["evidence_ref"] = evidence_ref
 
         return self._request("POST", "/v1/verify", payload)
