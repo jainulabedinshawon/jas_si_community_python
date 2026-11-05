@@ -5,7 +5,7 @@ A lightweight Python client for the JAS-SI Intelligence API
 ""Python" (https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)" (https://www.python.org/)
 ""CI" (https://github.com/jainulabedinshawon/jas_si_community_python/actions/workflows/ci.yml/badge.svg)" (https://github.com/jainulabedinshawon/jas_si_community_python/actions/workflows/ci.yml)
 ""API" (https://img.shields.io/badge/JAS--SI_API-v0.1.0-0A7A55)" (https://jas-si.vercel.app/docs)
-""SDK" (https://img.shields.io/badge/SDK-0.1.0-6F42C1)" (https://github.com/jainulabedinshawon/jas_si_community_python)
+""SDK" (https://img.shields.io/badge/SDK-0.1.1-6F42C1)" (https://github.com/jainulabedinshawon/jas_si_community_python)
 
 JAS-SI Community Python SDK is an independent Python HTTP client for interacting with the JAS-SI API.
 
